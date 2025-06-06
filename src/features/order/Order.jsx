@@ -1,14 +1,15 @@
 // Test ID: IIDSAT
-
+import { useEffect } from 'react';
 import OrderItem from './OrderItem';
 
-import { useLoaderData } from 'react-router-dom';
+import { useFetcher, useLoaderData } from 'react-router-dom';
 import { getOrder } from '../../services/apiRestaurant';
 import {
   calcMinutesLeft,
   formatCurrency,
   formatDate,
 } from '../../utils/helpers';
+import Updateorder from './Updateorder';
 
 function Order() {
   const order = useLoaderData();
@@ -23,9 +24,10 @@ function Order() {
     estimatedDelivery,
     cart,
   } = order;
-
+console.log("priority",priority);
   const deliveryIn = calcMinutesLeft(estimatedDelivery);
-
+  const fetcher=useFetcher();
+  useEffect(()=>{if(!fetcher.data&&fetcher.state==="idle")fetcher.load('/menu')},[fetcher]);
   return (
     <div className="space-y-8 px-4 py-6">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -56,7 +58,7 @@ function Order() {
 
       <ul className="dive-stone-200 divide-y border-b border-t">
         {cart.map((item) => (
-          <OrderItem item={item} key={item.pizzaId} />
+          <OrderItem item={item} key={item.pizzaId} ingredients={fetcher?.data?.find((p) => p.id === item.pizzaId)?.ingredients??[]} isLoadingIngredients={fetcher.state==="loading"}/>
         ))}
       </ul>
 
@@ -73,6 +75,7 @@ function Order() {
           To pay on delivery: {formatCurrency(orderPrice + priorityPrice)}
         </p>
       </div>
+      {priority?null:<Updateorder order={order}/>}
     </div>
   );
 }
