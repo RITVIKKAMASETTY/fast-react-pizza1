@@ -8,7 +8,7 @@ const cartslice=createSlice({
         removeitem(state,action){state.cart=state.cart.filter((item)=>item.pizzaId!==action.payload)},
         clearcart(state,action){state.cart=[]},
         increaseitemquantity(state,action){const item=state.cart.find((item)=>item.pizzaId===action.payload);item.quantity++;item.totalPrice=item.quantity*item.unitPrice},
-        decreaseitemquantity(state,action){const item=state.cart.find((item)=>item.pizzaId===action.payload);item.quantity--;item.totalPrice=item.quantity*item.unitPrice},
+        decreaseitemquantity(state,action){const item=state.cart.find((item)=>item.pizzaId===action.payload);item.quantity--;item.totalPrice=item.quantity*item.unitPrice;if(item.quantity===0)cartslice.caseReducers.removeitem(state,action)},
     }
 });
 export const {additem,removeitem,clearcart,increaseitemquantity,decreaseitemquantity}=cartslice.actions;

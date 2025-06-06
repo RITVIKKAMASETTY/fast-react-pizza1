@@ -4,6 +4,7 @@ import { formatCurrency } from '../../utils/helpers';
 import { additem, } from '../cart/cartSlice';
 import { getcount } from '../cart/cartSlice';
 import Deleteitem from '../cart/Deleteitem';
+import Updatequantity from '../cart/Updatequantity';
 function MenuItem({ pizza }) {
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
   const currentquantity=useSelector(getcount(id));
@@ -38,7 +39,7 @@ dispatch(additem(newItem));
               Sold out
             </p>
           )}
-          {currentquantity>0&&<Deleteitem id={id}/>}
+          {currentquantity>0&&<div className="flex items-center gap-3 sm:gap-8"><Updatequantity id={id} currentquantity={currentquantity}/><Deleteitem id={id}/></div>}
           {!soldOut&&currentquantity===0&&<Button type="small" onClick={handleaddtocart}>Add to cart</Button>}
         </div>
       </div>
